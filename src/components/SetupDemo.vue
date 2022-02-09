@@ -11,10 +11,14 @@
 import _ from "lodash";
 import { defineComponent, onMounted, ref } from "vue";
 export default defineComponent({
-  name: "HelloWorld",
+  name: "SetupDemo",
 
   setup: (props) => {
-    let repositories = ref<number[]>([]);
+    let repositories = ref<
+      {
+        a: number;
+      }[]
+    >([]);
 
     const getUserRepositories = async () => {
       await new Promise((resolve) => {
@@ -22,7 +26,7 @@ export default defineComponent({
           resolve(1);
         }, 3000);
       });
-      repositories.value = [1];
+      repositories.value = [{ a: 1 }];
     };
 
     onMounted(getUserRepositories); // 在 `mounted` 时调用 `getUserRepositories`
@@ -39,20 +43,4 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-a {
-  color: #42b983;
-}
-
-label {
-  margin: 0 0.5em;
-  font-weight: bold;
-}
-
-code {
-  background-color: #eee;
-  padding: 2px 4px;
-  border-radius: 4px;
-  color: #304455;
-}
-</style>
+<style scoped></style>

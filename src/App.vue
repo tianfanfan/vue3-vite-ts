@@ -1,14 +1,14 @@
 <template>
-  <Checker />
+  <SetupDemo />
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import Checker from "./components/Checker.vue";
+import SetupDemo from "./components/SetupDemo.vue";
 export default defineComponent({
   name: "App",
   components: {
-    Checker,
+    SetupDemo,
   },
 });
 </script>
