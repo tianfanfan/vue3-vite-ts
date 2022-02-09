@@ -1,20 +1,37 @@
 <template>
-  <div>1</div>
+  <div @click="getUserRepositories">getRes</div>
+  <ul>
+    <li v-for="item in repositories" :key="item">
+      {{ item }}
+    </li>
+  </ul>
+  <div>{{ a }}</div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import _ from "lodash";
+import { defineComponent, onMounted, ref } from "vue";
 export default defineComponent({
   name: "HelloWorld",
 
-  setup: () => {
-    return {};
-  },
-  data() {
+  setup: (props) => {
+    let repositories = ref<number[]>([]);
+
+    const getUserRepositories = async () => {
+      repositories.value = [1];
+    };
+
+    onMounted(getUserRepositories); // 在 `mounted` 时调用 `getUserRepositories`
+
     return {
-      counter: 0,
+      repositories,
+      getUserRepositories,
     };
   },
+  data() {
+    return {};
+  },
+  methods: {},
 });
 </script>
 
