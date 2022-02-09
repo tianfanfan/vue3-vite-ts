@@ -26,4 +26,12 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": ["off", { argsIgnorePattern: "^_" }],
     "prettier/prettier": ["error", {}, { usePrettierrc: true }],
   },
+  overrides: [
+    {
+      files: ["*.html"],
+      rules: {
+        "vue/comment-directive": "off",
+      },
+    },
+  ],
 };
