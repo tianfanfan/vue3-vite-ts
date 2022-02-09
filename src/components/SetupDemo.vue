@@ -1,8 +1,8 @@
 <template>
   <div @click="getUserRepositories">getRes</div>
   <ul>
-    <li v-for="item in repositories" :key="item">
-      {{ item }}
+    <li v-for="item in repositories" :key="`${item}`">
+      {{ item.a }}
     </li>
   </ul>
 </template>
