@@ -6,13 +6,14 @@
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "HelloWorld",
+
+  setup: () => {
+    return {};
+  },
   data() {
     return {
       counter: 0,
     };
-  },
-  setup: () => {
-    return {};
   },
 });
 </script>
