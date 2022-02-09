@@ -1,14 +1,27 @@
 <template>
-  <SetupDemo />
+  <div>
+    <button @click="changeUserName">changeUserName</button>
+    <SetupDemo :user="user" />
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import SetupDemo from "./components/SetupDemo.vue";
 export default defineComponent({
   name: "App",
   components: {
     SetupDemo,
+  },
+  setup: () => {
+    const user = ref("user");
+    const changeUserName = () => {
+      user.value = user.value + "1";
+    };
+    return {
+      user,
+      changeUserName,
+    };
   },
 });
 </script>
