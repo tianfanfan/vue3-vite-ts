@@ -5,7 +5,6 @@
       {{ item }}
     </li>
   </ul>
-  <div>{{ a }}</div>
 </template>
 
 <script lang="ts">
@@ -18,6 +17,11 @@ export default defineComponent({
     let repositories = ref<number[]>([]);
 
     const getUserRepositories = async () => {
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(1);
+        }, 3000);
+      });
       repositories.value = [1];
     };
 
