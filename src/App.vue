@@ -1,26 +1,29 @@
 <template>
   <div>
-    <button @click="changeUserName">changeUserName</button>
-    <SetupDemo :user="user" />
+    <button @click="changeState">changeState</button>
+    <div>state {{ state }}</div>
+    <div>state2 {{ state2 }}</div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, isReactive, reactive, readonly, ref } from "vue";
 import SetupDemo from "./components/SetupDemo.vue";
 export default defineComponent({
   name: "App",
-  components: {
-    SetupDemo,
-  },
+  components: {},
   setup: () => {
-    const user = ref("user");
-    const changeUserName = () => {
-      user.value = user.value + "1";
-    };
+    const state = ref({
+      name: "John",
+    });
+
+    const state2 = reactive(state);
     return {
-      user,
-      changeUserName,
+      state,
+      changeState() {
+        state.value.name = state.value.name + "1";
+      },
+      state2,
     };
   },
 });
