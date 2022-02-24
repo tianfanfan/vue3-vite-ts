@@ -4,12 +4,13 @@
     <InputTask @add="add"></InputTask>
 
     <n-list bordered>
-      <n-list-item v-for="task in todoList" :key="task.title">
+      <n-list-item v-for="task in todoList" :key="task.id" class="item">
         <TodoListItem
           :id="task.id"
           :title="task.title"
-          :check="checkedId.includes(task.id)"
+          :check="checkedIds.includes(task.id)"
           @delete="handlerDeleteTask"
+          @chose-task="handlerChoseTask"
         ></TodoListItem>
       </n-list-item>
     </n-list>
@@ -33,18 +34,22 @@ export default defineComponent({
   setup: (props) => {
     const todoListStore = useTodoListStore();
     const todoListStoreRef = storeToRefs(todoListStore);
-    const { list: todoList } = todoListStoreRef;
+    const { list: todoList, checkedIds } = todoListStoreRef;
+
     return {
       todoList,
       add(v: string) {
         todoListStore.addTask({
           title: v,
-          id: "" + Math.random(),
+          id: `${Math.random()}`,
         });
       },
-      checkedId: [] as any[],
+      checkedIds,
       handlerDeleteTask(id: string) {
         todoListStore.deleteTask(id);
+      },
+      handlerChoseTask(payload: { check: boolean; id: string }) {
+        todoListStore.checkTask(payload);
       },
     };
   },
@@ -58,5 +63,10 @@ ul {
 }
 li {
   list-style: none;
+}
+
+/* fix: flex 布局无限扩宽问题 */
+.item :deep() .n-list-item__main {
+  min-width: 0;
 }
 </style>

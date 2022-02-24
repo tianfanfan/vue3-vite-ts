@@ -1,21 +1,19 @@
 <template>
-  <div>
-    <div class="task-card">
-      <n-checkbox
-        class="checkbox"
-        :checked="checked"
-        @update:checked="handlerCheck"
-      >
-      </n-checkbox>
-      <div class="content">
-        {{ title }}
-      </div>
-      <div class="operation">
-        <n-space>
-          <n-button text type="info"> Edit </n-button>
-          <n-button text type="error" @click="handlerDelete"> Delete </n-button>
-        </n-space>
-      </div>
+  <div class="task-card">
+    <n-checkbox
+      class="checkbox"
+      :checked="check"
+      @update:checked="handlerCheck"
+    >
+    </n-checkbox>
+    <div class="content">
+      {{ title }}
+    </div>
+    <div class="operation">
+      <n-space>
+        <n-button text type="info"> Edit </n-button>
+        <n-button text type="error" @click="handlerDelete"> Delete </n-button>
+      </n-space>
     </div>
   </div>
 </template>
@@ -41,17 +39,15 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: { delete: null },
+  emits: { delete: null, "chose-task": null },
   setup: (props, content) => {
-    const checked = ref(props.check);
-
+    const { id } = toRefs(props);
     return {
-      checked,
-      handlerCheck(newCheck: boolean) {
-        checked.value = newCheck;
+      handlerCheck(check: boolean) {
+        content.emit("chose-task", { id: id.value, check });
       },
       handlerDelete() {
-        content.emit("delete", props.id);
+        content.emit("delete", id.value);
       },
     };
   },
