@@ -1,29 +1,24 @@
 <template>
   <div>
-    <button @click="changeState">changeState</button>
-    <div>state {{ state }}</div>
-    <div>state2 {{ state2 }}</div>
+    <n-config-provider :theme-overrides="themeOverrides">
+      <TodoList class="TodoList"></TodoList>
+    </n-config-provider>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, isReactive, reactive, readonly, ref } from "vue";
-import SetupDemo from "./components/SetupDemo.vue";
+import { defineComponent } from "vue";
+import TodoList from "./components/todo-list/TodoList.vue";
+import { NConfigProvider, GlobalThemeOverrides } from "naive-ui";
 export default defineComponent({
   name: "App",
-  components: {},
+  components: { TodoList, NConfigProvider },
   setup: () => {
-    const state = ref({
-      name: "John",
-    });
-
-    const state2 = reactive(state);
+    const themeOverrides: GlobalThemeOverrides = {
+      common: {},
+    };
     return {
-      state,
-      changeState() {
-        state.value.name = state.value.name + "1";
-      },
-      state2,
+      themeOverrides,
     };
   },
 });
@@ -35,5 +30,11 @@ export default defineComponent({
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+}
+</style>
+<style scoped>
+.TodoList {
+  width: 500px;
+  margin: auto;
 }
 </style>
