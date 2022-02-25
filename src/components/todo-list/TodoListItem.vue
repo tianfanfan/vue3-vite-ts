@@ -6,52 +6,65 @@
       @update:checked="handlerCheck"
     >
     </n-checkbox>
-    <div class="content">
+    <div class="content" @click="handlerCheck(!check)">
       {{ title }}
     </div>
+
     <div class="operation">
       <n-space>
-        <n-button text type="info"> Edit </n-button>
+        <n-button text type="info" @click="handlerEdit"> Edit </n-button>
         <n-button text type="error" @click="handlerDelete"> Delete </n-button>
       </n-space>
     </div>
   </div>
+  <edit-input-item :ref="editComponent" @add="handlerAdd"></edit-input-item>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import _ from "lodash";
-import { defineComponent, onMounted, ref, toRaw, toRefs } from "vue";
+import {
+  defineEmits,
+  ref,
+  defineProps,
+  withDefaults,
+  toRefs,
+  toRaw,
+} from "vue";
+import EditInputItem from "./EditInputItem.vue";
+type EditInputItemRef = InstanceType<typeof EditInputItem>;
 
-export default defineComponent({
-  name: "TodoListItem",
-  components: {},
-  props: {
-    title: {
-      type: String,
-      required: true,
-    },
-    id: {
-      type: String,
-      required: true,
-    },
-    check: {
-      type: Boolean,
-      required: true,
-    },
-  },
-  emits: { delete: null, "chose-task": null },
-  setup: (props, content) => {
-    const { id } = toRefs(props);
-    return {
-      handlerCheck(check: boolean) {
-        content.emit("chose-task", { id: id.value, check });
-      },
-      handlerDelete() {
-        content.emit("delete", id.value);
-      },
-    };
-  },
+interface Props {
+  id: string;
+  title: string;
+  check: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  id: "",
+  title: "",
 });
+const { id, check } = toRaw(props);
+
+const emit = defineEmits<{
+  (e: "chose-task", arg: { id: string; check: boolean }): void;
+  (e: "delete", id: string): void;
+}>();
+
+const editComponent = ref<EditInputItemRef>();
+
+const handlerCheck = (check: boolean) => {
+  emit("chose-task", { id, check });
+};
+const handlerDelete = () => {
+  emit("delete", id);
+};
+const handlerEdit = () => {
+  console.log(id);
+};
+const handlerAdd = () => {
+  // content.emit("delete", id.value);
+  console.log(id);
+};
 </script>
 
 <style scoped lang="less">
