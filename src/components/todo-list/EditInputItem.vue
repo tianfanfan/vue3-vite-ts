@@ -48,7 +48,6 @@ const handlePositiveClick = () => {
 };
 const handleNegativeClick = () => {
   showPopover.value = false;
-  console.info("并不");
 };
 
 defineExpose({

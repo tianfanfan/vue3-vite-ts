@@ -64,6 +64,7 @@ const handlerDelete = () => {
 };
 
 const editComponent = ref<EditInputItemRef>();
+
 const handlerEdit = () => {
   editComponent.value?.open(title.value);
 };
