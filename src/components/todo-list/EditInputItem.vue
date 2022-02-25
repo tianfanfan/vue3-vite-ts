@@ -8,7 +8,7 @@
       placeholder=""
     />
     <div class="right">
-      <n-button class="comfirmAdd" type="primary" @click="comfirmAdd">
+      <n-button class="comfirmAdd" type="primary" @click="confirmAdd">
         OK
       </n-button>
     </div>
@@ -25,7 +25,7 @@ const emit = defineEmits<{
 }>();
 
 const input = ref("");
-const comfirmAdd = () => {
+const confirmAdd = () => {
   if (input.value) {
     emit("add", input.value);
   }

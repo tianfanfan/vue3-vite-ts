@@ -7,9 +7,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
 import TodoList from "./components/todo-list/TodoList.vue";
-import { NConfigProvider, GlobalThemeOverrides } from "naive-ui";
+import { defineComponent } from "vue";
+import { GlobalThemeOverrides, NConfigProvider } from "naive-ui";
+
 export default defineComponent({
   name: "App",
   components: { TodoList, NConfigProvider },

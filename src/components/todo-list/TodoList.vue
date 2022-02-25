@@ -5,13 +5,13 @@
 
     <n-list bordered>
       <n-list-item v-for="task in todoList" :key="task.id" class="item">
-        <TodoListItem
+        <todo-list-item
           :id="task.id"
           :title="task.title"
           :check="checkedIds.includes(task.id)"
           @delete="handlerDeleteTask"
           @chose-task="handlerChoseTask"
-        ></TodoListItem>
+        ></todo-list-item>
       </n-list-item>
     </n-list>
   </div>
@@ -21,9 +21,9 @@
 import { useTodoListStore } from "@/store/useTodoListStore";
 import _ from "lodash";
 import { storeToRefs } from "pinia";
-import { defineComponent, onMounted, ref, toRaw, toRefs } from "vue";
 import InputTask from "./InputTask.vue";
 import TodoListItem from "./TodoListItem.vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "TodoList",

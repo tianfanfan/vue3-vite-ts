@@ -1,4 +1,10 @@
 {
   "javascript.suggestionActions.enabled": false,
   "typescript.suggestionActions.enabled": false,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.preferences.includePackageJsonAutoImports": "on",
+  "cSpell.words": [
+    "Avenir",
+    "pinia"
+  ]
 }
