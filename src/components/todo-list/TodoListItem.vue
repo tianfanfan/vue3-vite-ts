@@ -2,9 +2,9 @@
   <div class="task-card">
     <n-checkbox
       class="checkbox"
-      :active="finished || check"
+      :checked="finished || active"
       :disabled="finished"
-      @update:active="handlerCheck"
+      @update:checked="handlerCheck"
     >
     </n-checkbox>
     <div
@@ -12,7 +12,7 @@
         content: true,
         finished: finished,
       }"
-      @click="handlerCheck(!check)"
+      @click="handlerCheck(!active)"
     >
       {{ title }}
     </div>
@@ -39,25 +39,25 @@ type EditInputItemRef = InstanceType<typeof EditInputItem>;
 interface Props {
   id: string;
   title: string;
-  check: boolean;
+  active: boolean;
   finished: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   id: "",
   title: "",
-  check: false,
 });
-const { id, check, title, finished } = toRefs(props);
+const { id, active, title, finished } = toRefs(props);
 
 const emit = defineEmits<{
-  (e: "chose-task", arg: { id: string; check: boolean }): void;
+  (e: "active-task", arg: { id: string; active: boolean }): void;
   (e: "edit-task", arg: { id: string; title: string }): void;
   (e: "delete", id: string): void;
 }>();
 
-const handlerCheck = (check: boolean) => {
-  emit("chose-task", { id: id.value, check });
+const handlerCheck = (active: boolean) => {
+  console.log(1);
+  emit("active-task", { id: id.value, active });
 };
 const handlerDelete = () => {
   emit("delete", id.value);

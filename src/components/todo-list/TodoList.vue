@@ -14,10 +14,10 @@
           <todo-list-item
             :id="task.id"
             :title="task.title"
-            :check="task.active"
+            :active="task.active"
             :finished="task.finished"
             @delete="handlerDeleteTask"
-            @chose-task="handlerChoseTask"
+            @active-task="handlerChoseTask"
             @edit-task="handlerEditTask"
           ></todo-list-item>
         </n-list-item>
@@ -126,7 +126,7 @@ const disableFinish = computed(() => {
 const handlerDeleteTask = (id: string) => {
   todoListStore.deleteTask(id);
 };
-const handlerChoseTask = (payload: { check: boolean; id: string }) => {
+const handlerChoseTask = (payload: { active: boolean; id: string }) => {
   todoListStore.checkTask(payload);
 };
 const handlerEditTask = (payload: { title: string; id: string }) => {

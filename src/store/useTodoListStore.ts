@@ -26,10 +26,10 @@ export const useTodoListStore = defineStore("todoListStore", {
     deleteTask(id: Task["id"]) {
       this.list = this.list.filter((v) => v.id !== id);
     },
-    checkTask({ check, id }: { check: boolean; id: string }) {
+    checkTask({ active, id }: { active: boolean; id: string }) {
       this.list.forEach((task) => {
         if (task.id === id) {
-          task.active = check;
+          task.active = active;
         }
       });
     },
