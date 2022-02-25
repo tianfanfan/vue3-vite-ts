@@ -4,7 +4,10 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.preferences.includePackageJsonAutoImports": "on",
   "cSpell.words": [
+    "addx",
     "Avenir",
-    "pinia"
+    "clickoutside",
+    "pinia",
+    "popconfirm"
   ]
 }

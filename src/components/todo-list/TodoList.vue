@@ -8,51 +8,51 @@
         <todo-list-item
           :id="task.id"
           :title="task.title"
-          :check="checkedIds.includes(task.id)"
+          :check="getChecked(task.id)"
           @delete="handlerDeleteTask"
           @chose-task="handlerChoseTask"
+          @edit-task="handlerEditTask"
         ></todo-list-item>
       </n-list-item>
     </n-list>
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { useTodoListStore } from "@/store/useTodoListStore";
 import _ from "lodash";
 import { storeToRefs } from "pinia";
 import InputTask from "./InputTask.vue";
 import TodoListItem from "./TodoListItem.vue";
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 
-export default defineComponent({
-  name: "TodoList",
-  components: {
-    TodoListItem,
-    InputTask,
-  },
-  setup: (props) => {
-    const todoListStore = useTodoListStore();
-    const todoListStoreRef = storeToRefs(todoListStore);
-    const { list: todoList, checkedIds } = todoListStoreRef;
+const todoListStore = useTodoListStore();
+const todoListStoreRef = storeToRefs(todoListStore);
+const { list: todoList, checkedIds } = todoListStoreRef;
 
-    return {
-      todoList,
-      add(v: string) {
-        todoListStore.addTask({
-          title: v,
-          id: `${Math.random()}`,
-        });
-      },
-      checkedIds,
-      handlerDeleteTask(id: string) {
-        todoListStore.deleteTask(id);
-      },
-      handlerChoseTask(payload: { check: boolean; id: string }) {
-        todoListStore.checkTask(payload);
-      },
-    };
-  },
+const add = (v: string) => {
+  todoListStore.addTask({
+    title: v,
+    id: `${Math.random()}`,
+  });
+};
+
+console.log(checkedIds.value, todoList.value);
+
+const handlerDeleteTask = (id: string) => {
+  todoListStore.deleteTask(id);
+};
+const handlerChoseTask = (payload: { check: boolean; id: string }) => {
+  todoListStore.checkTask(payload);
+};
+const handlerEditTask = (payload: { title: string; id: string }) => {
+  todoListStore.editTask(payload);
+};
+
+const getChecked = computed(() => {
+  return (id: string) => {
+    return checkedIds.value.includes(id);
+  };
 });
 </script>
 

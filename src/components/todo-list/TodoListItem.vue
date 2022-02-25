@@ -12,24 +12,18 @@
 
     <div class="operation">
       <n-space>
-        <n-button text type="info" @click="handlerEdit"> Edit </n-button>
+        <edit-input-item ref="editComponent" @addx="handlerAdd">
+          <n-button text type="info" @click="handlerEdit"> Edit </n-button>
+        </edit-input-item>
         <n-button text type="error" @click="handlerDelete"> Delete </n-button>
       </n-space>
     </div>
   </div>
-  <edit-input-item :ref="editComponent" @add="handlerAdd"></edit-input-item>
 </template>
 
 <script lang="ts" setup>
 import _ from "lodash";
-import {
-  defineEmits,
-  ref,
-  defineProps,
-  withDefaults,
-  toRefs,
-  toRaw,
-} from "vue";
+import { ref, toRefs } from "vue";
 import EditInputItem from "./EditInputItem.vue";
 type EditInputItemRef = InstanceType<typeof EditInputItem>;
 
@@ -42,28 +36,30 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   id: "",
   title: "",
+  check: false,
 });
-const { id, check } = toRaw(props);
+const { id, check, title } = toRefs(props);
 
 const emit = defineEmits<{
   (e: "chose-task", arg: { id: string; check: boolean }): void;
+  (e: "edit-task", arg: { id: string; title: string }): void;
   (e: "delete", id: string): void;
 }>();
 
-const editComponent = ref<EditInputItemRef>();
-
 const handlerCheck = (check: boolean) => {
-  emit("chose-task", { id, check });
+  emit("chose-task", { id: id.value, check });
 };
 const handlerDelete = () => {
-  emit("delete", id);
+  emit("delete", id.value);
 };
+
+const editComponent = ref<EditInputItemRef>();
 const handlerEdit = () => {
-  console.log(id);
+  editComponent.value?.open(title.value);
 };
-const handlerAdd = () => {
-  // content.emit("delete", id.value);
-  console.log(id);
+
+const handlerAdd = (title: string) => {
+  emit("edit-task", { id: id.value, title });
 };
 </script>
 

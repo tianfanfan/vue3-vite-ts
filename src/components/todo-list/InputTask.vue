@@ -2,7 +2,7 @@
   <div class="input-task">
     <input v-model="input" class="input" />
     <div class="right">
-      <n-button class="comfirmAdd" type="primary" @click="comfirmAdd">
+      <n-button class="confirmAdd" type="primary" @click="confirmAdd">
         Add
       </n-button>
     </div>
@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import _ from "lodash";
-import { defineComponent, onMounted, reactive, ref, toRaw, toRefs } from "vue";
+import { defineComponent, ref } from "vue";
 
 export default defineComponent({
   name: "InputTask",
@@ -21,7 +21,7 @@ export default defineComponent({
     const input = ref("");
     return {
       input,
-      comfirmAdd() {
+      confirmAdd() {
         if (input.value) {
           context.emit("add", input.value);
           input.value = "";
@@ -55,7 +55,7 @@ export default defineComponent({
 
 .right {
   margin-left: 10px;
-  .comfirmAdd {
+  .confirmAdd {
     height: 100%;
   }
 }

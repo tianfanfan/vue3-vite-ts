@@ -1,37 +1,50 @@
 <template>
-  <div class="input-task">
+  <n-popconfirm
+    :show="showPopover"
+    :show-icon="false"
+    @positive-click="handlePositiveClick"
+    @negative-click="handleNegativeClick"
+    @clickoutside="showPopover = false"
+  >
+    <template #trigger>
+      <slot></slot>
+    </template>
     <n-input
       v-model:value="input"
       size="large"
       type="textarea"
-      rows="2"
       placeholder=""
     />
-    <div class="right">
-      <n-button class="comfirmAdd" type="primary" @click="confirmAdd">
-        OK
-      </n-button>
-    </div>
-  </div>
+  </n-popconfirm>
 </template>
 
 <script lang="ts" setup>
 import _ from "lodash";
-import { defineEmits, defineExpose, reactive, ref, toRaw, toRefs } from "vue";
+import { ref } from "vue";
+
+const showPopover = ref(false);
 
 const emit = defineEmits<{
-  (e: "add", arg: string): void;
+  (e: "addx", arg: string): void;
   (e: "delete", id: string): void;
 }>();
 
 const input = ref("");
-const confirmAdd = () => {
-  if (input.value) {
-    emit("add", input.value);
-  }
+
+const open = (_input: string) => {
+  showPopover.value = true;
+  input.value = _input;
 };
 
-const open = () => {};
+const handlePositiveClick = () => {
+  showPopover.value = false;
+  emit("addx", input.value);
+  input.value = "";
+};
+const handleNegativeClick = () => {
+  showPopover.value = false;
+  console.info("并不");
+};
 
 defineExpose({
   open,
@@ -40,29 +53,4 @@ defineExpose({
 
 <style scoped lang="less">
 @color: #18a058;
-.input-task {
-  display: flex;
-  align-items: stretch;
-}
-.input {
-  display: block;
-  width: 100%;
-  height: 40px;
-  text-align: center;
-  color: @color;
-  border-radius: 0;
-  border: 3px solid @color;
-  &:focus-visible {
-    // outline-color: rgb(178, 194, 35);
-    border: 3px solid rgb(178, 194, 35);
-  }
-  outline: none;
-}
-
-.right {
-  margin-left: 10px;
-  .comfirmAdd {
-    height: 100%;
-  }
-}
 </style>

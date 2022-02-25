@@ -14,8 +14,7 @@ export const useTodoListStore = defineStore("todoListStore", {
     const state: State = {
       list: [
         {
-          title:
-            "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+          title: "sleep",
           id: "111",
         },
       ],
@@ -35,6 +34,12 @@ export const useTodoListStore = defineStore("todoListStore", {
         if (!this.checkedIds.includes(id)) this.checkedIds.push(id);
       } else {
         this.checkedIds = this.checkedIds.filter((v) => v !== id);
+      }
+    },
+    editTask({ id, title }: { id: string; title: string }) {
+      const currentTask = this.list.find((v) => v.id === id);
+      if (currentTask?.title) {
+        currentTask.title = title;
       }
     },
   },
