@@ -35,7 +35,7 @@ export default defineComponent({
 </style>
 <style scoped>
 .TodoList {
-  width: 500px;
+  width: 800px;
   margin: auto;
 }
 </style>

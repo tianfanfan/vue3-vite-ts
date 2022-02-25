@@ -2,18 +2,27 @@
   <div class="task-card">
     <n-checkbox
       class="checkbox"
-      :checked="check"
-      @update:checked="handlerCheck"
+      :active="finished || check"
+      :disabled="finished"
+      @update:active="handlerCheck"
     >
     </n-checkbox>
-    <div class="content" @click="handlerCheck(!check)">
+    <div
+      :class="{
+        content: true,
+        finished: finished,
+      }"
+      @click="handlerCheck(!check)"
+    >
       {{ title }}
     </div>
 
     <div class="operation">
       <n-space>
         <edit-input-item ref="editComponent" @addx="handlerAdd">
-          <n-button text type="info" @click="handlerEdit"> Edit </n-button>
+          <n-button text type="info" :disabled="finished" @click="handlerEdit">
+            Edit
+          </n-button>
         </edit-input-item>
         <n-button text type="error" @click="handlerDelete"> Delete </n-button>
       </n-space>
@@ -31,6 +40,7 @@ interface Props {
   id: string;
   title: string;
   check: boolean;
+  finished: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -38,7 +48,7 @@ const props = withDefaults(defineProps<Props>(), {
   title: "",
   check: false,
 });
-const { id, check, title } = toRefs(props);
+const { id, check, title, finished } = toRefs(props);
 
 const emit = defineEmits<{
   (e: "chose-task", arg: { id: string; check: boolean }): void;
@@ -79,6 +89,9 @@ const handlerAdd = (title: string) => {
     text-overflow: ellipsis;
     color: #3f91ba;
     word-break: break-all;
+    &.finished {
+      text-decoration: line-through;
+    }
   }
 
   .operation {

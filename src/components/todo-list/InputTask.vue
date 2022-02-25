@@ -1,6 +1,6 @@
 <template>
   <div class="input-task">
-    <input v-model="input" class="input" />
+    <input v-model="input" class="input" @change="confirmAdd" />
     <div class="right">
       <n-button class="confirmAdd" type="primary" @click="confirmAdd">
         Add
