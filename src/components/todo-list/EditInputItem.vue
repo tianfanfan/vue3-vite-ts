@@ -2,6 +2,8 @@
   <n-popconfirm
     :show="showPopover"
     :show-icon="false"
+    :width="300"
+    placement="bottom"
     @positive-click="handlePositiveClick"
     @negative-click="handleNegativeClick"
     @clickoutside="showPopover = false"
@@ -13,6 +15,9 @@
       v-model:value="input"
       size="large"
       type="textarea"
+      :rows="3"
+      :autosize="{ minRows: 3, maxRows: 3 }"
+      show-count
       placeholder=""
     />
   </n-popconfirm>
@@ -50,7 +55,3 @@ defineExpose({
   open,
 });
 </script>
-
-<style scoped lang="less">
-@color: #18a058;
-</style>

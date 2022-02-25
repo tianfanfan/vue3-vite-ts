@@ -15,6 +15,18 @@
         ></todo-list-item>
       </n-list-item>
     </n-list>
+    <div class="footer">
+      <div class="progress">
+        <n-progress
+          status="success"
+          type="line"
+          border-radius="0"
+          :show-indicator="false"
+          :percentage="20"
+        />
+      </div>
+      <n-button>Oops!</n-button>
+    </div>
   </div>
 </template>
 
@@ -37,8 +49,6 @@ const add = (v: string) => {
   });
 };
 
-console.log(checkedIds.value, todoList.value);
-
 const handlerDeleteTask = (id: string) => {
   todoListStore.deleteTask(id);
 };
@@ -55,7 +65,6 @@ const getChecked = computed(() => {
   };
 });
 </script>
-
 <style scoped>
 ul {
   padding: 0;
@@ -68,5 +77,17 @@ li {
 /* fix: flex 布局无限扩宽问题 */
 .item :deep() .n-list-item__main {
   min-width: 0;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+}
+.progress {
+  max-width: 100%;
+  flex: 1 1 auto;
+  margin-right: 12px;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 </style>
