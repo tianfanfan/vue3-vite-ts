@@ -10,7 +10,7 @@ export const userUserStore = defineStore("userStore", {
   },
   actions: {
     async login() {
-      const auth = useTodoListStore();
+      const todoListStore = useTodoListStore();
     },
   },
 });
