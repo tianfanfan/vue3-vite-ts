@@ -62,6 +62,7 @@ import { computed, ref, toRaw } from "vue";
 import { useThemeVars } from "naive-ui";
 import { changeColor } from "seemly";
 import { randomId } from "@/util/randomId";
+import dayjs from "dayjs";
 
 const themeVars = useThemeVars();
 const todoListStore = useTodoListStore();
@@ -69,7 +70,6 @@ const todoListStoreRef = storeToRefs(todoListStore);
 const { list } = todoListStoreRef;
 
 const activeKey = ref("ALL");
-console.log(activeKey);
 const menuOptions = [
   {
     label: "ALL",
@@ -90,6 +90,7 @@ const add = (v: string) => {
     id: randomId(),
     finished: false,
     active: false,
+    createAt: dayjs().valueOf(),
   });
 };
 

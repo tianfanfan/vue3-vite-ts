@@ -16,5 +16,4 @@ const app = createApp(App);
 app.use(pinia).use(naive);
 app.mount("#app");
 
-init(useTodoListStore)
-
+init(useTodoListStore);

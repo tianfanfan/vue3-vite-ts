@@ -56,7 +56,6 @@ const emit = defineEmits<{
 }>();
 
 const handlerCheck = (active: boolean) => {
-  console.log(1);
   emit("active-task", { id: id.value, active });
 };
 const handlerDelete = () => {
