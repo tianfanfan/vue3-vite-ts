@@ -9,8 +9,11 @@
     "clickoutside",
     "Fira",
     "Lato",
+    "localforage",
     "pinia",
     "popconfirm",
-    "vfonts"
+    "uuidv",
+    "vfonts",
+    "vite"
   ]
 }

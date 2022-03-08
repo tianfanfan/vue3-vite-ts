@@ -8,16 +8,13 @@ import naive from "naive-ui";
 // import "vfonts/Lato.css";
 // 等宽字体
 import "vfonts/FiraCode.css";
-import { useTodoListStore } from "./store/useTodoListStore";
+import { init, useTodoListStore } from "./store/useTodoListStore";
 
 const pinia = createPinia();
+
 const app = createApp(App);
-
 app.use(pinia).use(naive);
-
-const todoListStore = useTodoListStore();
-
-todoListStore.$subscribe((mutation, state) => {
-  console.log(mutation, state)
-})
 app.mount("#app");
+
+init(useTodoListStore)
+

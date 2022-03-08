@@ -61,6 +61,7 @@ import TodoListItem from "./TodoListItem.vue";
 import { computed, ref, toRaw } from "vue";
 import { useThemeVars } from "naive-ui";
 import { changeColor } from "seemly";
+import { randomId } from "@/util/randomId";
 
 const themeVars = useThemeVars();
 const todoListStore = useTodoListStore();
@@ -68,7 +69,7 @@ const todoListStoreRef = storeToRefs(todoListStore);
 const { list } = todoListStoreRef;
 
 const activeKey = ref("ALL");
-
+console.log(activeKey);
 const menuOptions = [
   {
     label: "ALL",
@@ -86,7 +87,7 @@ const menuOptions = [
 const add = (v: string) => {
   todoListStore.addTask({
     title: v,
-    id: `${Math.random()}`,
+    id: randomId(),
     finished: false,
     active: false,
   });

@@ -1,4 +1,5 @@
-import _ from "lodash";
+import { localforageDb } from "@/local-forage/localforageDb";
+import _, { initial } from "lodash";
 import { defineStore } from "pinia";
 type Task = {
   title: string;
@@ -51,3 +52,38 @@ export const useTodoListStore = defineStore("todoListStore", {
     },
   },
 });
+
+type UseTodoListStore = typeof useTodoListStore;
+
+export const init = async (useTodoListStore: UseTodoListStore) => {
+  const todoListStore = useTodoListStore();
+
+  todoListStore.$subscribe((mutation, state) => {
+    const events = Array.isArray(mutation.events)
+      ? mutation.events
+      : [mutation.events];
+    const eventTypes = events.map((v) => v.type);
+    const isOnlyAdd = eventTypes.every((v) => v === "add");
+
+    events.forEach((e) => {
+      const eType = e.type;
+      if (eType === "add") {
+        const newValue = e.newValue;
+        localforageDb.setItem(newValue.id, newValue);
+      }
+    });
+    console.log(mutation, state, isOnlyAdd);
+  });
+
+  const initStoreState = async () => {
+    const keys = await localforageDb.keys();
+    const list = await Promise.all(
+      keys.map((k) => localforageDb.getItem<Task>(k)),
+    );
+    todoListStore.$patch((state) => {
+      state.list = list.filter((v) => v !== null) as Task[];
+    });
+  };
+
+  await initStoreState();
+};
