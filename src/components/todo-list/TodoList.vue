@@ -91,8 +91,6 @@ const add = (v: string) => {
   });
 };
 
-window.add = add;
-
 const todoList = computed(() => {
   switch (activeKey.value) {
     case "ALL":
