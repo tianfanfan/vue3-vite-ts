@@ -65,7 +65,6 @@ export const useTodoListStore = defineStore("todoListStore", {
         this.getAllTask();
       }
     },
-    checkDataAccuracyDebounce: _.debounce(checkDataAccuracy),
     async getAllTask() {
       const list = await todoListService.getAllItem();
       this.list = list;
