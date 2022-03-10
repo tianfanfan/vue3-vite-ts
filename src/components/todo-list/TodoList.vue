@@ -61,7 +61,6 @@ import TodoListItem from "./TodoListItem.vue";
 import { computed, ref, toRaw } from "vue";
 import { useThemeVars } from "naive-ui";
 import { changeColor } from "seemly";
-import { randomId } from "@/util/randomId";
 import dayjs from "dayjs";
 
 const themeVars = useThemeVars();
@@ -84,15 +83,15 @@ const menuOptions = [
     key: "FINISHED",
   },
 ];
+
 const add = (v: string) => {
   todoListStore.addTask({
     title: v,
-    id: randomId(),
-    finished: false,
-    active: false,
     createAt: dayjs().valueOf(),
   });
 };
+
+window.add = add;
 
 const todoList = computed(() => {
   switch (activeKey.value) {
@@ -132,7 +131,7 @@ const handlerChoseTask = (payload: { active: boolean; id: string }) => {
   todoListStore.checkTask(payload);
 };
 const handlerEditTask = (payload: { title: string; id: string }) => {
-  todoListStore.editTask(payload);
+  todoListStore.editTask([payload]);
 };
 
 const handlerComplete = () => {
