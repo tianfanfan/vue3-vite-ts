@@ -1,9 +1,9 @@
-import { localforageDb } from "@/local-forage/localforageDb";
-import dayjs, { Dayjs } from "dayjs";
-import _, { initial } from "lodash";
+import { subscribe, todoListService } from "@/service/todoListService";
+import { getMd5FromArray, md5 } from "@/util/md5";
+import _ from "lodash";
 import { defineStore } from "pinia";
 
-type Task = {
+export type Task = {
   title: string;
   id: string;
   finished: boolean;
@@ -23,35 +23,73 @@ export const useTodoListStore = defineStore("todoListStore", {
     return state;
   },
   actions: {
-    addTask(task: Task) {
-      this.list.push(task);
+    async addTask(task: Pick<Task, "createAt" | "title">) {
+      await todoListService.addItem(task);
     },
 
-    deleteTask(id: Task["id"]) {
-      this.list = this.list.filter((v) => v.id !== id);
-    },
-    checkTask({ active, id }: { active: boolean; id: string }) {
-      this.list.forEach((task) => {
-        if (task.id === id) {
-          task.active = active;
-        }
-      });
+    async deleteTask(id: Task["id"]) {
+      await todoListService.deleteItems([id]);
     },
 
-    editTask({ id, title }: { id: string; title: string }) {
-      const currentTask = this.list.find((v) => v.id === id);
-      if (currentTask?.title) {
-        currentTask.title = title;
+    async checkTask({ active, id }: { active: boolean; id: string }) {
+      await this.editTask([
+        {
+          active,
+          id,
+        },
+      ]);
+    },
+
+    async editTask(tasks: Array<Partial<Task>>) {
+      await todoListService.editItems(tasks);
+    },
+
+    async completeTasks(ids: string[]) {
+      this.editTask(
+        ids.map((id) => {
+          return {
+            id,
+            finished: true,
+            active: false,
+          };
+        }),
+      );
+    },
+
+    async checkDataAccuracy() {
+      const ids = this.list.map((v) => v.id);
+      const hash1 = getMd5FromArray(ids);
+      const hash2 = await todoListService.getLastItemHash(ids.length);
+      if (hash1 !== hash2) {
+        // 需要重刷
+        this.getAllTask();
       }
     },
+    checkDataAccuracyDebounce: _.debounce(checkDataAccuracy),
+    async getAllTask() {
+      const list = await todoListService.getAllItem();
+      this.list = list;
+    },
 
-    completeTasks(ids: string[]) {
-      this.list.forEach((task) => {
-        if (ids.includes(task.id)) {
-          task.finished = true;
-          task.active = false;
+    async handlerEditTaskSuccess(newTasks: Array<Task>) {
+      newTasks.forEach((v) => {
+        const taskIndex = this.list.findIndex((item) => item.id === v.id);
+        if (taskIndex >= 0) {
+          this.list[taskIndex] = v;
         }
       });
+    },
+
+    async handlerRemoveTaskSuccess(ids: Array<string>) {
+      this.list = this.list.filter((task) => {
+        return !ids.includes(task.id);
+      });
+    },
+
+    async handlerAddTaskSuccess(task: Task) {
+      this.list.push(task);
+
+      this.checkDataAccuracy();
     },
   },
 });
@@ -61,62 +99,17 @@ type UseTodoListStore = typeof useTodoListStore;
 export const init = async (useTodoListStore: UseTodoListStore) => {
   const todoListStore = useTodoListStore();
 
-  todoListStore.$subscribe((mutation, state) => {
-    const events = Array.isArray(mutation.events)
-      ? mutation.events
-      : [mutation.events];
-    const eventTypes = events.map((v) => v.type);
-
-    events.forEach(async (e) => {
-      const eType = e.type;
-      if (eType === "add") {
-        const newValue = e.newValue;
-        localforageDb.setItem(newValue.id, newValue);
-      }
-      if (eType === "set") {
-        const target = e.target as any;
-        const key = e.key;
-        const newValue = e.newValue;
-        if ("id" in target) {
-          const id = target.id;
-          const dbTarget = await localforageDb.getItem<any>(target.id);
-
-          if (dbTarget) {
-            dbTarget[key] = newValue;
-          }
-          await localforageDb.setItem<any>(target.id, dbTarget);
-        }
-        if ("list" in target) {
-          const oldValue = e.oldValue.map((v: { id: string }) => v.id);
-          const newValue = e.newValue.map((v: { id: string }) => v.id);
-          const needDeleteItemsId = oldValue.filter(
-            (v: string) => !newValue.includes(v),
-          );
-          await Promise.all(
-            needDeleteItemsId.map((id: string) => localforageDb.removeItem(id)),
-          );
-        }
-      }
-    });
+  subscribe("add", (item: Task, key) => {
+    todoListStore.handlerAddTaskSuccess(item);
   });
 
-  const initStoreState = async () => {
-    const keys = await localforageDb.keys();
-    const list = await Promise.all(
-      keys.map((k) => localforageDb.getItem<Task>(k)),
-    );
-    todoListStore.$patch((state) => {
-      state.list = list
-        .filter((v) => v !== null)
-        .sort((a, b) => {
-          const aCreateAt = a?.createAt ?? 0;
-          const bCreateAt = b?.createAt ?? 0;
-          if (aCreateAt > bCreateAt) return 1;
-          if (aCreateAt < bCreateAt) return -1;
-          return 0;
-        }) as Task[];
-    });
-  };
+  subscribe("edit", (item: Task[]) => {
+    todoListStore.handlerEditTaskSuccess(item);
+  });
 
-  await initStoreState();
+  subscribe("remove", (ids: Array<string>) => {
+    todoListStore.handlerRemoveTaskSuccess(ids);
+  });
+
+  todoListStore.getAllTask();
 };
