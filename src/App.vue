@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import TodoList from "./components/todo-list/TodoList.vue";
+import TodoList from "@/components/todo-list/TodoList.vue";
 import { defineComponent } from "vue";
 import { GlobalThemeOverrides, NConfigProvider } from "naive-ui";
 
